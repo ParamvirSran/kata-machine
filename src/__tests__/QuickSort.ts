@@ -1,6 +1,6 @@
 import quick_sort from "@code/QuickSort";
 
-test("quick-sort", function () {
+test("quick-sort", function() {
     const arr = [9, 3, 7, 4, 69, 420, 42];
 
     debugger;

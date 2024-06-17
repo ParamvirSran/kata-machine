@@ -1,6 +1,6 @@
 import maze_solver from "@code/MazeSolver";
 
-test("maze solver", function () {
+test("maze solver", function() {
     const maze = [
         "xxxxxxxxxx x",
         "x        x x",

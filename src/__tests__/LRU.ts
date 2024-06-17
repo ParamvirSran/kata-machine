@@ -1,6 +1,6 @@
 import LRU from "@code/LRU";
 
-test("LRU", function () {
+test("LRU", function() {
     const lru = new LRU<string, number>(3) as ILRU<string, number>;
 
     expect(lru.get("foo")).toEqual(undefined);

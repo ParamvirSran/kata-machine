@@ -1,6 +1,6 @@
 import insertion_sort from "@code/InsertionSort";
 
-test("insertion-sort", function () {
+test("insertion-sort", function() {
     const arr = [9, 3, 7, 4, 69, 420, 42];
     debugger;
     // where is my debugger
