@@ -21,29 +21,30 @@ export default class Queue<T> {
 
     enqueue(item: T): void {
         const newNode = new Node(item);
-        if (this.length == 0) {
-            this.front = newNode;
-            this.back = newNode;
-        } else if (this.back != undefined) {
+        if (this.length === 0) {
+            this.front = this.back = newNode;
+        } else if (this.back !== undefined) {
             this.back.next = newNode;
             this.back = newNode;
         }
         this.length++;
     }
-    deque(): T | undefined {
-        const value = this.front?.value;
 
-        if (this.front != undefined) {
-            if (this.front.next != undefined) {
-                this.front = this.front.next;
-            } else {
-                this.front = undefined;
-                this.back = undefined;
-            }
-            this.length--;
+    deque(): T | undefined {
+        if (this.front === undefined) {
+            return undefined;
         }
+
+        const value = this.front.value;
+        this.front = this.front.next;
+
+        if (this.front === undefined) {
+            this.back = undefined;
+        }
+        this.length--;
         return value;
     }
+
     peek(): T | undefined {
         return this.front?.value;
     }

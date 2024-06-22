@@ -2,7 +2,7 @@ export default class ArrayList<T> {
     public length: number;
     private arr: Array<T>;
 
-    constructor(capacity: number) {
+    constructor(capacity: number = 10) {
         this.length = 0;
         this.arr = new Array<T>(capacity);
     }
@@ -11,8 +11,8 @@ export default class ArrayList<T> {
         if (this.arr.length <= this.length) {
             this.expand();
         }
-        for (let i = 0; i < this.length; i++) {
-            this.arr[this.length - i] = this.arr[this.length - i - 1];
+        for (let i = this.length; i > 0; i--) {
+            this.arr[i] = this.arr[i - 1];
         }
         this.arr[0] = item;
         this.length++;
@@ -33,12 +33,13 @@ export default class ArrayList<T> {
         if (this.arr.length <= this.length) {
             this.expand();
         }
-        for (let i = 0; i < this.length - idx; i++) {
-            this.arr[this.length - i] = this.arr[this.length - i - 1];
+        for (let i = this.length; i > idx; i--) {
+            this.arr[i] = this.arr[i - 1];
         }
         this.arr[idx] = item;
         this.length++;
     }
+
     append(item: T): void {
         if (this.arr.length <= this.length) {
             this.expand();
@@ -46,27 +47,28 @@ export default class ArrayList<T> {
         this.arr[this.length] = item;
         this.length++;
     }
+
     remove(item: T): T | undefined {
         if (this.length === 0) { return undefined; }
-        let value = undefined;
 
         for (let i = 0; i < this.length; i++) {
             if (item === this.arr[i]) {
-                value = this.removeAt(i);
-                return value;
+                return this.removeAt(i);
             }
         }
-        return value;
+        return undefined;
     }
+
     get(idx: number): T | undefined {
         if (idx < 0 || idx >= this.length) { return undefined; }
         return this.arr[idx];
     }
+
     removeAt(idx: number): T | undefined {
         if (idx < 0 || idx >= this.length) { return undefined; }
         const value = this.arr[idx];
 
-        for (let i = idx; i < this.length; i++) {
+        for (let i = idx; i < this.length - 1; i++) {
             this.arr[i] = this.arr[i + 1];
         }
         this.length--;

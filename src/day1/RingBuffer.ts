@@ -4,33 +4,46 @@ export default class RingBuffer<T> {
     private head: number;
     private tail: number;
 
-    constructor() {
+    constructor(capacity: number = 5) {
         this.length = 0;
-        this.arr = new Array<T>(5);
+        this.arr = new Array<T>(capacity);
         this.head = this.tail = 0;
     }
 
+    private expand(): void {
+        let newSize = this.arr.length * 2;
+        let newArr = new Array<T>(newSize);
+
+        for (let i = 0; i < this.length; i++) {
+            newArr[i] = this.arr[(this.head + i) % this.arr.length];
+        }
+        this.arr = newArr;
+        this.head = 0;
+        this.tail = this.length;
+    }
+
     push(item: T): void {
-        if ((this.head % this.arr.length) === (this.tail % this.arr.length)) {
-            let temp = new Array<T>(this.arr.length * 2);
-            for (let i = 0; i < this.length; i++) {
-                temp[i] = this.arr[(this.head + i) % this.arr.length];
-            }
-            this.arr = temp;
+        if (this.length === this.arr.length) {
+            this.expand();
         }
         this.arr[this.tail % this.arr.length] = item;
+        this.tail = (this.tail + 1) % this.arr.length;
         this.length++;
-        this.tail++;
     }
+
     get(idx: number): T | undefined {
-        const value = this.arr[(this.head + idx) % this.arr.length];
-        return value;
+        if (idx < 0 || idx >= this.length) { return undefined; }
+
+        return this.arr[(this.head + idx) % this.arr.length];
     }
+
     pop(): T | undefined {
         if (this.length === 0) { return undefined; }
-        const value = this.arr[(this.head) % this.arr.length];
+
+        const value = this.arr[this.head % this.arr.length];
+        this.head = (this.head + 1) % this.arr.length;
         this.length--;
-        this.head++;
+
         return value;
     }
 }

@@ -2,27 +2,24 @@ export default function quick_sort(arr: number[]): void {
     quicksort(arr, 0, arr.length - 1);
 }
 
-function quicksort(arr: number[], p: number, r: number): void {
-    if (p < r) {
-        let q: number = partition(arr, p, r);
-        quicksort(arr, p, q - 1);
-        quicksort(arr, q + 1, r);
+function quicksort(arr: number[], low: number, high: number): void {
+    if (low < high) {
+        const pivot: number = partition(arr, low, high);
+        quicksort(arr, low, pivot - 1);
+        quicksort(arr, pivot + 1, high);
     }
 }
 
-function partition(arr: number[], p: number, r: number): number {
-    let x = arr[r];
-    let i = p - 1;
-    for (let j = p; j < r; j++) {
-        if (arr[j] < x) {
+function partition(arr: number[], low: number, high: number): number {
+    const pivot = arr[high];
+    let i = low - 1;
+
+    for (let j = low; j < high; j++) {
+        if (arr[j] < pivot) {
             i++;
-            let temp = arr[i];
-            arr[i] = arr[j];
-            arr[j] = temp;
+            [arr[i], arr[j]] = [arr[j], arr[i]];
         }
     }
-    let temp = arr[i + 1];
-    arr[i + 1] = arr[r];
-    arr[r] = temp;
+    [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]];
     return i + 1;
 }

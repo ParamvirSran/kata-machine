@@ -39,15 +39,14 @@ function walk(maze: string[], wall: string, curr: Point, end: Point, seen: boole
 }
 
 export default function solve(maze: string[], wall: string, start: Point, end: Point): Point[] {
-    let seen: boolean[][] = new Array(maze.length);
+    const seen: boolean[][] = new Array(maze.length);
     for (let i = 0; i < maze.length; i++) {
         seen[i] = new Array(maze[0].length).fill(false);
     }
-    let path: Point[] = [];
+    const path: Point[] = [];
     if (walk(maze, wall, start, end, seen, path)) {
         return path;
     } else {
         return [];
     }
 }
-

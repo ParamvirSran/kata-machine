@@ -37,7 +37,7 @@ export default class SinglyLinkedList<T> {
         const newNode = new Node(item);
         let curr = this.head;
 
-        for (let i = 0; i < idx; i++) {
+        for (let i = 0; i < idx - 1; i++) {
             if (curr) {
                 curr = curr.next;
             }
@@ -67,7 +67,7 @@ export default class SinglyLinkedList<T> {
 
     remove(item: T): T | undefined {
         let curr = this.head;
-        let prev = undefined;
+        let prev: Node<T> | undefined = undefined;
 
         while (curr) {
             if (curr.value === item) {
@@ -87,6 +87,7 @@ export default class SinglyLinkedList<T> {
         }
         return undefined;
     }
+
     get(idx: number): T | undefined {
         if (idx < 0 || idx >= this.length) { return undefined; }
         let curr = this.head;
@@ -97,8 +98,10 @@ export default class SinglyLinkedList<T> {
         }
         return curr?.value;
     }
+
     removeAt(idx: number): T | undefined {
         if (idx < 0 || idx >= this.length) { return undefined; }
+
         if (idx === 0) {
             const value = this.head?.value;
             this.head = this.head?.next;
@@ -108,12 +111,14 @@ export default class SinglyLinkedList<T> {
             this.length--;
             return value;
         }
+
         let curr = this.head;
         for (let i = 0; i < idx - 1; i++) {
             if (curr) {
                 curr = curr.next;
             }
         }
+
         if (curr && curr.next) {
             const value = curr.next.value;
             curr.next = curr.next.next;

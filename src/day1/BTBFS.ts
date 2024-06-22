@@ -1,17 +1,15 @@
 export default function bfs(head: BinaryNode<number>, needle: number): boolean {
-    return walk(head, needle);
-}
-
-function walk(root: BinaryNode<number> | null, needle: number): boolean {
-    if (!root) {
-        return false;
-    } else if (root.value === needle) {
-        return true;
-    } else if (walk(root.left, needle)) {
-        return true;
-    } else if (walk(root.right, needle)) {
-        return true;
-    } else {
-        return false;
+    const q: (BinaryNode<number> | null)[] = [head];
+    while (q.length) {
+        const curr = q.shift() as BinaryNode<number> | undefined | null;
+        if (!curr) {
+            continue;
+        }
+        if (curr.value === needle) {
+            return true;
+        }
+        q.push(curr.left);
+        q.push(curr.right);
     }
+    return false;
 }
