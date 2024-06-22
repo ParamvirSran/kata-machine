@@ -1,15 +1,13 @@
 export default function pre_order_search(head: BinaryNode<number>): number[] {
-    let visited: number[] = new Array();
-    walk(visited, head);
-    return visited;
+    return walk(head, []);
 }
 
-function walk(visited: number[], root: BinaryNode<number> | null): boolean {
+function walk(root: BinaryNode<number> | null, path: number[]): number[] {
     if (!root) {
-        return false;
+        return path;
     }
-    visited.push(root.value);
-    walk(visited, root.left);
-    walk(visited, root.right);
-    return true;
+    path.push(root.value);
+    walk(root.left, path);
+    walk(root.right, path);
+    return path;
 }

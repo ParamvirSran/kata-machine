@@ -50,16 +50,18 @@ export default class DoublyLinkedList<T> {
         }
 
         let curr = this.head;
-        for (let i = 0; i < idx - 1 && curr; i++) {
+        for (let i = 0; i < idx && curr; i++) {
             curr = curr.next;
         }
 
         if (curr) {
-            const node: Node<T> = { value: item, prev: curr, next: curr.next };
-            if (curr.next) {
-                curr.next.prev = node;
+            const node: Node<T> = { value: item, prev: curr.prev, next: curr };
+            if (curr.prev) {
+                curr.prev.next = node;
+            } else {
+                this.head = node;
             }
-            curr.next = node;
+            curr.prev = node;
             this.length++;
         }
     }
@@ -69,31 +71,27 @@ export default class DoublyLinkedList<T> {
             return undefined;
         }
 
-        let curr = this.head;
-        while (curr.next && curr.value !== item) {
+        let curr: Node<T> | undefined = this.head;
+        while (curr && curr.value !== item) {
             curr = curr.next;
         }
-        if (!curr || curr.value !== item) {
+        if (!curr) {
             return undefined;
         }
         return this.removeNode(curr);
     }
 
     private removeNode(node: Node<T>): T | undefined {
-        let prev = node.prev;
-        let next = node.next;
+        if (node.prev) {
+            node.prev.next = node.next;
+        } else {
+            this.head = node.next;
+        }
 
-        if (!prev && next) {
-            next.prev = undefined;
-            this.head = next;
-        } else if (prev && !next) {
-            prev.next = undefined;
-            this.tail = prev;
-        } else if (!prev && !next) {
-            this.head = this.tail = undefined;
-        } else if (prev && next) {
-            prev.next = next;
-            next.prev = prev;
+        if (node.next) {
+            node.next.prev = node.prev;
+        } else {
+            this.tail = node.prev;
         }
         this.length--;
         return node.value;
@@ -104,8 +102,8 @@ export default class DoublyLinkedList<T> {
             return undefined;
         }
         let curr = this.head;
-        for (let i = 0; i < idx && curr?.next; i++) {
-            curr = curr.next;
+        for (let i = 0; i < idx; i++) {
+            curr = curr?.next;
         }
         return curr?.value;
     }
@@ -114,14 +112,9 @@ export default class DoublyLinkedList<T> {
         if (idx < 0 || idx >= this.length) {
             return undefined;
         }
-        if (!this.head) {
-            return undefined;
-        }
         let curr = this.head;
         for (let i = 0; i < idx; i++) {
-            if (curr && curr.next) {
-                curr = curr.next;
-            }
+            curr = curr?.next;
         }
         if (!curr) {
             return undefined;
