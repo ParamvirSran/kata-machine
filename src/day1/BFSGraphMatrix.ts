@@ -1,36 +1,29 @@
 export default function bfs(graph: WeightedAdjacencyMatrix, source: number, needle: number): number[] | null {
     const seen = new Array(graph.length).fill(false);
     const parent = new Array(graph.length).fill(-1);
-
+    const queue: number[] = [source];
     seen[source] = true;
-    const q: number[] = [source];
 
-    while (q.length > 0) {
-        const curr = q.shift() as number;
-
+    while (queue.length > 0) {
+        const curr = queue.shift() as number;
         if (curr === needle) {
             break;
         }
-
-        const next = graph[curr];
-        for (let i = 0; i < next.length; i++) {
-            if (next[i] > 0 && !seen[i]) {
-                seen[i] = true;
+        const neighbors = graph[curr];
+        for (let i = 0; i < neighbors.length; i++) {
+            if (neighbors[i] > 0 && !seen[i]) {
+                queue.push(i);
                 parent[i] = curr;
-                q.push(i);
-            } else {
-                continue;
+                seen[i] = true;
             }
         }
     }
     if (parent[needle] === -1) {
         return null;
     }
-    let curr = needle;
-    const out: number[] = [];
-    while (parent[curr] !== -1) {
-        out.push(curr);
-        curr = parent[curr];
+    const path: number[] = [];
+    for (let curr = needle; curr !== -1; curr = parent[curr]) {
+        path.push(curr);
     }
-    return [source].concat(out.reverse());
+    return path.reverse();
 }
