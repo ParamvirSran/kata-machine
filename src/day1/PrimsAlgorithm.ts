@@ -1,47 +1,33 @@
+import { Heap } from 'heap-js';
+
 export default function prims(list: WeightedAdjacencyList): WeightedAdjacencyList | null {
-    const numVertices = list.length;
-    if (numVertices === 0) return null;
+    const num_nodes = list.length;
+    if (num_nodes === 0) return null;
 
-    const inMST: boolean[] = Array(numVertices).fill(false);
-    const minEdge: GraphEdge[] = Array(numVertices).fill({ to: -1, weight: Infinity });
-    const mst: WeightedAdjacencyList = Array.from({ length: numVertices }, () => []);
+    const mst: WeightedAdjacencyList = Array.from({ length: num_nodes }, () => []);
+    const visited = new Array<boolean>(num_nodes).fill(false);
+    const minHeap = new Heap<[node: number, edge: GraphEdge]>((a, b) => a[1].weight - b[1].weight);
 
-    minEdge[0] = { to: 0, weight: 0 };
+    visited[0] = true;
+    list[0].forEach(edge => {
+        minHeap.push([0, edge]);
+    });
 
-    for (let i = 0; i < numVertices; i++) {
-        let u = -1;
+    while (!minHeap.isEmpty()) {
+        const [node, edge] = minHeap.pop()!;
 
-        // Find the vertex with the smallest edge weight that is not in the MST
-        for (let j = 0; j < numVertices; j++) {
-            if (!inMST[j] && (u === -1 || minEdge[j].weight < minEdge[u].weight)) {
-                u = j;
+        if (visited[edge.to]) continue;
+
+        visited[edge.to] = true;
+        mst[node].push({ to: edge.to, weight: edge.weight });
+        mst[edge.to].push({ to: node, weight: edge.weight });
+
+        list[edge.to].forEach(neighbor => {
+            if (!visited[neighbor.to]) {
+                minHeap.push([edge.to, neighbor]);
             }
-        }
-
-        if (minEdge[u].weight === Infinity) {
-            return null; // Graph is not connected
-        }
-
-        inMST[u] = true;
-
-        // If u is not the starting vertex, add the edge to the MST
-        if (u !== 0) {
-            const { to, weight } = minEdge[u];
-            mst[u].push({ to, weight });
-            mst[to].push({ to: u, weight });
-        }
-
-        // Update the edges for the vertices adjacent to u
-        for (const edge of list[u]) {
-            relax(u, edge, inMST, minEdge);
-        }
+        });
     }
+    if (visited.includes(false)) return null;
     return mst;
-}
-
-function relax(u: number, edge: GraphEdge, inMST: boolean[], minEdge: GraphEdge[]) {
-    const { to, weight } = edge;
-    if (!inMST[to] && weight < minEdge[to].weight) {
-        minEdge[to] = { to: u, weight };
-    }
 }
